@@ -17,7 +17,6 @@ namespace WindowsFormsApp1
         public Point[] path;
         public int size;
         public int combo;
-        public int[,] board;
     };
 
     public partial class Form1 : Form
@@ -174,6 +173,14 @@ namespace WindowsFormsApp1
 
         }
 
+        private void ApplyPath(int[,] target, Point[] path, int path_size) {
+            for (int i = 1; i < path_size; i++) {
+
+                SwapBoard(target, path[i].Y, path[i].X, path[i - 1].Y, path[i - 1].X);
+            
+            }
+        
+        }
         private void FindBestPathBFS()
         {
             best_path_combo = 0;
@@ -198,9 +205,6 @@ namespace WindowsFormsApp1
                             ps.path[1] = next;
                             ps.combo = 0;
                             ps.size = 2;
-                            ps.board = new int[h, w];
-                            CopyBoard(board, ps.board);
-                            SwapBoard(ps.board, next.Y, next.X, cur.Y, cur.X);
                             queue.Enqueue(ps);
                         }
 
@@ -216,9 +220,6 @@ namespace WindowsFormsApp1
                             ps.path[1] = next;
                             ps.combo = 0;
                             ps.size = 2;
-                            ps.board = new int[h, w];
-                            CopyBoard(board, ps.board);
-                            SwapBoard(ps.board, next.Y, next.X, cur.Y, cur.X);
                             queue.Enqueue(ps);
                         }
 
@@ -234,9 +235,6 @@ namespace WindowsFormsApp1
                             ps.path[1] = next;
                             ps.combo = 0;
                             ps.size = 2;
-                            ps.board = new int[h, w];
-                            CopyBoard(board, ps.board);
-                            SwapBoard(ps.board, next.Y, next.X, cur.Y, cur.X);
                             queue.Enqueue(ps);
                         }
 
@@ -252,9 +250,6 @@ namespace WindowsFormsApp1
                             ps.path[1] = next;
                             ps.combo = 0;
                             ps.size = 2;
-                            ps.board = new int[h, w];
-                            CopyBoard(board, ps.board);
-                            SwapBoard(ps.board, next.Y, next.X, cur.Y, cur.X);
                             queue.Enqueue(ps);
                         }
 
@@ -268,13 +263,19 @@ namespace WindowsFormsApp1
             sw.Start();
             while (queue.Count > 0)
             {
-                if (sw.Elapsed.TotalSeconds >= 30) {
+                //Debug.Print("{0}", queue.Count);
+                if (sw.Elapsed.TotalSeconds >= 10) {
 
                     break;
                 }
 
                 PathState ps = queue.Dequeue();
-                int combo = CaculateCombo(ps.board, false, false, false);
+
+                int[,] copy = new int[h, w];
+                CopyBoard(board, copy);
+
+                ApplyPath(copy, ps.path, ps.size);
+                int combo = CaculateCombo(copy, false, false, false);
                 if (combo < ps.combo) continue;
 
 
@@ -309,9 +310,6 @@ namespace WindowsFormsApp1
                         next_ps.size = ps.size + 1;
                         next_ps.combo = ps.combo;
 
-                        next_ps.board = new int[h, w];
-                        CopyBoard(ps.board, next_ps.board);
-                        SwapBoard(next_ps.board, next.Y, next.X, cur.Y, cur.X);
                         queue.Enqueue(next_ps);
                     }
                 }
@@ -329,9 +327,6 @@ namespace WindowsFormsApp1
                         next_ps.size = ps.size + 1;
                         next_ps.combo = ps.combo;
 
-                        next_ps.board = new int[h, w];
-                        CopyBoard(ps.board, next_ps.board);
-                        SwapBoard(next_ps.board, next.Y, next.X, cur.Y, cur.X);
                         queue.Enqueue(next_ps);
                     }
                 }
@@ -350,9 +345,6 @@ namespace WindowsFormsApp1
                         next_ps.size = ps.size + 1;
                         next_ps.combo = ps.combo;
 
-                        next_ps.board = new int[h, w];
-                        CopyBoard(ps.board, next_ps.board);
-                        SwapBoard(next_ps.board, next.Y, next.X, cur.Y, cur.X);
                         queue.Enqueue(next_ps);
                     }
                 }
@@ -372,9 +364,6 @@ namespace WindowsFormsApp1
                         next_ps.size = ps.size + 1;
                         next_ps.combo = ps.combo;
 
-                        next_ps.board = new int[h, w];
-                        CopyBoard(ps.board, next_ps.board);
-                        SwapBoard(next_ps.board, next.Y, next.X, cur.Y, cur.X);
                         queue.Enqueue(next_ps);
                     }
                 }
